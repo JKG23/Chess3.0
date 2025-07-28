@@ -1,4 +1,5 @@
 from pieces import *
+import time
 
 
 class Controller:
@@ -43,22 +44,43 @@ class Controller:
 
         # Black Pawns
         for i in range(8):
-            self.board[6][i] = Pawn("g" + str(i), colour="B")
-            self._piece_positions["BP"] = ["g" + str(i)]
+            self.board[6][i] = Pawn("g" + str(i + 1), colour="B")
+            self._piece_positions["BP"] = ["g" + str(i + 1)]
 
         # White Pawns
         for i in range(8):
-            self.board[1][i] = Pawn("b" + str(i), colour="W")
-            self._piece_positions["WP"] = ["b" + str(i)]
+            self.board[1][i] = Pawn("b" + str(i + 1), colour="W")
+            self._piece_positions["WP"] = ["b" + str(i + 1)]
 
         self.show()
         [print(i, val) for i, val in self._piece_positions.items()]
 
         return self.board
 
+    def get_piece_positions(self):
+        return self._piece_positions
+
+    def c2b(self, coord):
+        """Converts chess coords (a1) to board coords (0, 0)"""
+        coords = {'a': 7, 'b': 6, 'c': 5, 'd': 4, 'e': 3, 'f': 2, 'g': 1, 'h': 0}
+        return (str(int(coord[1]) - 1), coords[coord[0]])
+
     def show(self):
         [print(i) for i in self.board]
 
+    def move(self, old, new):
+        """Takes an old square and a new square, moves the piece from the old to the new square"""
+        for k, v in self._piece_positions.items():
+            new_positions = []
+            for pos in v:
+                if pos == old:
+                    new_positions.append(new)
+                else:
+                    new_positions.append(pos)
+            # If piece ws moved
+            if new_positions != v:
+                break
+        self._piece_positions[k] = new_positions
 
 def main():
     c = Controller()
